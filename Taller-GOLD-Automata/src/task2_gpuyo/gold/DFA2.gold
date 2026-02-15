@@ -1,0 +1,63 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+procedure main(args:String[]) begin
+	Q := {"q1", "q2", "q3", "q4", "q5", "q6"}
+	Σ := {'0', '1', '2'}
+	q := "q1"
+	F := {"q4"}		
+	A:= GDeterministicAutomaton(Q,Σ, q, F, δ)
+	GAutomataFrame.show(A)
+end
+
+function δ(state, input) begin
+	// Nodo q1 (transiciones)
+	if state = "q1" and input = '2' then
+		return "q2"
+	elseif state = "q1" and input = '1' then
+		return "q4"
+	elseif state = "q1" and input = '0' then
+		return state	
+
+	// Nodo q2 (transiciones)
+	elseif state = "q2" and input = '2' then
+		return "q3"
+	elseif state = "q2" and input = '1' then
+		return "q5"
+	elseif state = "q2" and input = '0' then
+		return state
+	
+	// Nodo q3 (transiciones)
+	elseif state = "q3" and input = '2' then
+		return "q1"
+	elseif state = "q3" and input = '1' then
+		return "q6"
+	elseif state = "q3" and input = '0' then
+		return state
+	
+	// Nodo q4 (transiciones)
+	elseif state = "q4" and input = '2' then
+		return "q5"
+	elseif state = "q4" and input = '1' then
+		return "q1"
+	elseif state = "q4" and input = '0' then
+		return state
+	
+	// Nodo q5 (transiciones)
+	elseif state = "q5" and input = '2' then
+		return "q6"
+	elseif state = "q5" and input = '1' then
+		return "q2"
+	elseif state = "q5" and input = '0' then
+		return state
+	
+	// Nodo q6 (transiciones)
+	elseif state = "q6" and input = '2' then
+		return "q4"
+	elseif state = "q6" and input = '1' then
+		return "q3"
+	elseif state = "q6" and input = '0' then
+		return state
+	end
+	
+end

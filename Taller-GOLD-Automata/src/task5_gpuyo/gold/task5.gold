@@ -1,0 +1,51 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+procedure main(args:String[]) begin
+	// Automata A
+	Q1 := {"A", "B", "C"}
+	Σ1 := {'a', 'b'}
+	q1 := "A"
+	F1 := {"C"}
+	Δ1 =
+	⟦
+	
+	// Nodo A
+	⟦"A", 'a', "A"⟧, ⟦"A", 'a', "B"⟧, ⟦"A", 'b', "A"⟧,
+	
+	// Nodo B
+	⟦"B", 'a', "C"⟧, ⟦"B", 'b', "A"⟧,
+	
+	// Nodo C
+	⟦"C", 'λ', "A"⟧
+	
+	⟧
+
+// ---------------------------------------------------------------------------------------------
+
+	// Automata B
+	Q2 := {"W", "Z"}
+	Σ2 := {'a', 'b'}
+	q2 := "W"
+	F2 := {"Z"}
+	Δ2 = 
+	⟦
+	
+	// Nodo W
+	⟦"W", 'a', "W"⟧, ⟦"W", 'b', "W"⟧, ⟦"W", 'b', "Z"⟧,
+	
+	// Nodo Z
+	⟦"Z", 'a', "Z"⟧, ⟦"Z", 'b', "Z"⟧
+	
+	⟧
+
+// ---------------------------------------------------------------------------------------------
+	// Inicialización de Automatas
+	A:= GNondeterministicAutomaton(Q1,Σ1, q1, F1, Δ1)
+	B:= GNondeterministicAutomaton(Q2,Σ2, q2, F2, Δ2)
+	C:= A.union(B)
+	
+	// Enseñar Automatas
+	GAutomataFrame.show(A, B, C)
+	
+end

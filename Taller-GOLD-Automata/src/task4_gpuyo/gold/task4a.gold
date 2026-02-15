@@ -1,0 +1,45 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+procedure main(args: String[]) begin
+   Q := {"q0", "q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11"}
+   Σ := {'a','b'}
+   q := "q0"
+   F := {"q11"}
+   Δ =
+   // Nodo q0
+   ⟦⟦"q0", 'λ', "q1"⟧, ⟦"q0", 'λ', "q5"⟧,
+   
+   // Nodo q1
+   ⟦"q1", 'λ', "q2"⟧, ⟦"q1", 'λ', "q3"⟧,
+   
+   // Nodo q2
+   ⟦"q2", 'a', "q4"⟧,
+   
+   // Nodo q3
+   ⟦"q3", 'b', "q4"⟧,
+   
+   // Nodo q4
+   ⟦"q4", 'λ', "q1"⟧, ⟦"q4", 'λ', "q5"⟧,
+   
+   // Nodo q5
+   ⟦"q5", 'λ', "q6"⟧,
+   
+   // Nodo q6
+   ⟦"q6", 'b', "q7"⟧,
+   
+   // Nodo q7
+   ⟦"q7", 'λ', "q8"⟧,
+   
+   // Nodo q8
+   ⟦"q8", 'λ', "q9"⟧, ⟦"q8", 'λ', "q11"⟧,
+   
+   // Nodo q9
+   ⟦"q9", 'a', "q10"⟧,
+   
+   // Nodo q10
+   ⟦"q10", 'λ', "q11"⟧, ⟦"q10", 'λ', "q9"⟧⟧
+   
+   A := GNondeterministicAutomaton(Q,Σ,q,F, Δ)
+   GAutomataFrame.show(A)
+end

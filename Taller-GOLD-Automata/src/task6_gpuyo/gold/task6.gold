@@ -1,0 +1,226 @@
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+var letrasProposicionales
+var operadoresLogicos
+var parentesis
+
+procedure main(args:String[]) begin
+	letrasProposicionales := ('p'‥'s')
+	operadoresLogicos := {'&', '|', '=', '<', '>', '0'}
+	parentesis := {'(', ')'}
+	
+	Q := {"q0", "q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10",
+	"q11", "q12", "q13", "q14", "q15","q16", "q17", "q18", "q19", "q20",
+	"q21", "q22", "q23", "q24", "q25", "q26", "q27", "q28", "q29", "q30",
+	"q31","q32", "q33", "q34", "q35", "q36", "q37", "q38", "q39", "q40",
+	"q41", "q42", "q43", "q44", "q45", "q46", "err"}
+	Σ := letrasProposicionales ∪ operadoresLogicos ∪ parentesis
+	q := "q0"
+	F := {"q15", "q32"}		
+	A := GDeterministicAutomaton(Q,Σ, q, F, δ)
+	GAutomataFrame.show(A)
+end
+
+function δ(state, input) begin
+// -------------------------------------------------------------------------------
+	// PARTE SIN PARENTESIS
+// -------------------------------------------------------------------------------
+
+	if state = "q0" and input ∈ letrasProposicionales then
+		return "q1"
+	
+	// AND
+	elseif state = "q1" and (input ∈ operadoresLogicos and input = '&') then
+		return "q2"
+	elseif state = "q2" and (input ∈ operadoresLogicos and input = '&')  then
+		return "q3"
+	elseif state = "q3" and input ∈ letrasProposicionales then
+		return "q15"
+	
+	// OR
+	elseif state = "q1" and (input ∈ operadoresLogicos and input = '|') then
+		return "q4"
+	elseif state = "q4" and (input ∈ operadoresLogicos and input = '|') then
+		return "q5"
+	elseif state = "q5" and input ∈ letrasProposicionales then
+		return "q15"
+	
+	// NOT
+	elseif state = "q4" and (input ∈ operadoresLogicos and input = '>') then
+		return "q6"
+	elseif state = "q6" and (input ∈ operadoresLogicos and input = '0') then
+		return "q1"
+	
+	// IMPLICATION
+	elseif state = "q1" and (input ∈ operadoresLogicos and input = '=') then
+		return "q7"
+	elseif state = "q7" and (input ∈ operadoresLogicos and input = '>') then
+		return "q8"
+	elseif state = "q8" and input ∈ letrasProposicionales then
+		return "q15"
+	
+	// NAND
+	elseif state = "q7" and (input ∈ operadoresLogicos and input = '|') then
+		return "q9"
+	elseif state = "q9" and (input ∈ parentesis and input = ')') then
+		return "q10"
+	elseif state = "q10" and (input ∈ operadoresLogicos and input = '0') then
+		return "q11"
+	elseif state = "q11" and input ∈ letrasProposicionales then
+		return "q15"
+	
+	// CONSEQUENCE
+	elseif state = "q1" and (input ∈ operadoresLogicos and input = '<') then
+		return "q12"
+	elseif state = "q12" and (input ∈ operadoresLogicos and input = '=') then
+		return "q13"
+	elseif state = "q13" and input ∈ letrasProposicionales then
+		return "q15"
+	
+	// EQUIVALENCE
+	elseif state = "q13" and (input ∈ operadoresLogicos and input = '>') then
+		return "q14"
+	elseif state = "q14" and input ∈ letrasProposicionales then
+		return "q15"
+
+// -------------------------------------------------------------------------------
+	// PARTE CON PARENTESIS
+// -------------------------------------------------------------------------------
+	
+	elseif state = "q0" and (input ∈ parentesis and input = '(') then
+		return "q16"
+	elseif state = "q16" and input ∈ letrasProposicionales then
+		return "q17"
+	
+	// AND
+	elseif state = "q17" and (input ∈ operadoresLogicos and input = '&') then
+		return "q18"
+	elseif state = "q18" and (input ∈ operadoresLogicos and input = '&')  then
+		return "q19"
+	elseif state = "q19" and input ∈ letrasProposicionales then
+		return "q31" 
+	
+	// OR
+	elseif state = "q17" and (input ∈ operadoresLogicos and input = '|') then
+		return "q20"
+	elseif state = "q20" and (input ∈ operadoresLogicos and input = '|') then
+		return "q21"
+	elseif state = "q21" and input ∈ letrasProposicionales then
+		return "q31"
+	
+	// NOT
+	elseif state = "q20" and (input ∈ operadoresLogicos and input = '>') then
+		return "q22"
+	elseif state = "q22" and (input ∈ operadoresLogicos and input = '0') then
+		return "q17"
+	
+	// IMPLICATION
+	elseif state = "q17" and (input ∈ operadoresLogicos and input = '=') then
+		return "q23"
+	elseif state = "q23" and (input ∈ operadoresLogicos and input = '>') then
+		return "q24"
+	elseif state = "q24" and input ∈ letrasProposicionales then
+		return "q31"
+	
+	// NAND
+	elseif state = "q23" and (input ∈ operadoresLogicos and input = '|') then
+		return "q25"
+	elseif state = "q25" and (input ∈ parentesis and input = ')') then
+		return "q26"
+	elseif state = "q26" and (input ∈ operadoresLogicos and input = '0') then
+		return "q27"
+	elseif state = "q27" and input ∈ letrasProposicionales then
+		return "q31"
+	
+	// CONSEQUENCE
+	elseif state = "q17" and (input ∈ operadoresLogicos and input = '<') then
+		return "q28"
+	elseif state = "q28" and (input ∈ operadoresLogicos and input = '=') then
+		return "q29"
+	elseif state = "q29" and input ∈ letrasProposicionales then
+		return "q31"
+	
+	// EQUIVALENCE
+	elseif state = "q29" and (input ∈ operadoresLogicos and input = '>') then
+		return "q30"
+	elseif state = "q30" and input ∈ letrasProposicionales then
+		return "q31"
+	
+	// CERRAR PARENTESIS
+	elseif state = "q31" and (input ∈ parentesis and input = ')') then
+		return "q32"
+
+// -------------------------------------------------------------------------------
+	// PALABRAS ANIDADAS
+// -------------------------------------------------------------------------------
+	
+	// AND
+	elseif state = "q32" and (input ∈ operadoresLogicos and input = '&') then
+		return "q33"
+	elseif state = "q33" and (input ∈ operadoresLogicos and input = '&')  then
+		return "q34"
+	elseif state = "q34" and (input ∈ parentesis and input = '(') then
+		return "q16" 
+	
+	// OR
+	elseif state = "q32" and (input ∈ operadoresLogicos and input = '|') then
+		return "q35"
+	elseif state = "q35" and (input ∈ operadoresLogicos and input = '|') then
+		return "q36"
+	elseif state = "q36" and (input ∈ parentesis and input = '(') then
+		return "q16"
+	
+	// NOT
+	elseif state = "q35" and (input ∈ operadoresLogicos and input = '>') then
+		return "q37"
+	elseif state = "q37" and (input ∈ operadoresLogicos and input = '0') then
+		return "q38"
+	
+	// CONEXIONES NOT
+	elseif state = "q38" and (input ∈ operadoresLogicos and input = '&') then
+		return "q33"
+	elseif state = "q38" and (input ∈ operadoresLogicos and input = '|') then
+		return "q35"
+	elseif state = "q38" and (input ∈ operadoresLogicos and input = '=') then
+		return "q39"
+	elseif state = "q38" and (input ∈ operadoresLogicos and input = '<') then
+		return "q44"
+	
+	// IMPLICATION
+	elseif state = "q32" and (input ∈ operadoresLogicos and input = '=') then
+		return "q39"
+	elseif state = "q39" and (input ∈ operadoresLogicos and input = '>') then
+		return "q40"
+	elseif state = "q40" and (input ∈ parentesis and input = '(') then
+		return "q16"
+	
+	// NAND
+	elseif state = "q39" and (input ∈ operadoresLogicos and input = '|') then
+		return "q41"
+	elseif state = "q41" and (input ∈ parentesis and input = ')') then
+		return "q42"
+	elseif state = "q42" and (input ∈ operadoresLogicos and input = '0') then
+		return "q43"
+	elseif state = "q43" and (input ∈ parentesis and input = '(') then
+		return "q16"
+	
+	// CONSEQUENCE
+	elseif state = "q32" and (input ∈ operadoresLogicos and input = '<') then
+		return "q44"
+	elseif state = "q44" and (input ∈ operadoresLogicos and input = '=') then
+		return "q45"
+	elseif state = "q45" and (input ∈ parentesis and input = '(') then
+		return "q16"
+	
+	// EQUIVALENCE
+	elseif state = "q45" and (input ∈ operadoresLogicos and input = '>') then
+		return "q46"
+	elseif state = "q46" and (input ∈ parentesis and input = '(') then
+		return "q16"
+	
+	// ELEMENTOS INVALIDOS
+	else
+		return "err"
+	end
+end
